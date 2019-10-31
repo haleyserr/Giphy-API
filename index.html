@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>GOT GIF's</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+
+<body>
+
+
+    <div id="buttonDisplay">
+        <button class="gifButton" data-character="Arya">Arya</button>
+        <button class="gifButton" data-character="Daenerys">Daenerys</button>
+        <button class="gifButton" data-character="Clegane">Clegane</button>
+        <button class="gifButton" data-character="Drogo">Drogo</button>
+        <button class="gifButton" data-character="Tyrion">Tyrion</button>
+
+    </div>
+
+    <div id="addButton">
+        <form id="add-button-form">
+            <label for="button-input">Search for another character:</label>
+            <input type="text" id="button-input"><br>
+            <input id="find-character" type="submit" value="Character Search">
+        </form>
+
+    </div>
+
+    <div id="gifDisplay">
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        // Set Veriables
+
+        // API Key not needed for query build, but left here for easy copy/paste
+        const apiKey = "go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk";
+
+        // Character Array is technically not needed since no longerre-rendering buttons, but leaving for console info
+
+        const characterArray = ["Arya", "Daenerys", "Clegane", "Drogo", "Tyrion"];
+        console.log(characterArray);
+
+
+        // When user adds Character, create new Button and add to characterArray
+
+        // Figured out how to append new button instead of re-rendering all
+        $("#find-character").on("click", function (event) {
+        event.preventDefault();
+        const newCharacter = $("#button-input").val().trim();
+        console.log(newCharacter);
+        const buttonDiv = $("<button>");
+        buttonDiv.attr("data-character", newCharacter);
+        buttonDiv.text(newCharacter);
+        buttonDiv.attr("class", "gifButton")
+
+        $("#buttonDisplay").append(buttonDiv);
+
+        characterArray.push(newCharacter);
+
+        });
+
+        //Re-Render using Array -Superceded
+
+        //function renderButtons() {
+
+            //$("#buttonDisplay").empty();
+
+
+           // for (let i = 0; i < characterArray.length; i++) {
+                //const a = $("<button>");
+               // a.addClass("gifButton");
+               // a.attr("data-character", characterArray[i]);
+               // a.text(characterArray[i]);
+               // $("#buttonDisplay").append(a);
+            //}
+        //}
+
+        //renderButtons();
+
+       // $("#find-character").on("click", function (event) {
+
+           // event.preventDefault();
+            //const newCharacter = $("#button-input").val().trim();
+            //characterArray.push(newCharacter);
+            //renderButtons();
+       // });
+
+
+        // When a Button is clicked, perform AJAX Call
+
+        $(".gifButton").on("click", function (event) {
+
+            const character = $(this).attr("data-character");
+
+            console.log(character);
+
+            const queryURL =
+                `https://api.giphy.com/v1/gifs/search?q=${character}&limit=10&offset=0&rating=G&lang=en&api_key=go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk`;
+
+            console.log(queryURL);
+
+            // AJAX Call
+            $.ajax({
+                    url: queryURL,
+                    method: "GET"
+
+                })
+
+                //Build Gifs IMG tag with data-still, data-animate, and src attributes
+                .then(function (response) {
+
+                    const results = response.data;
+
+
+                    //Since our query will pull up multiple div's. need to loop through results
+
+                    for (let i = 0; i < results.length; i++) {
+
+                        const gifDiv = $("<div>");
+                        const gifImg = $("<img>");
+                        const animateURL = results[i].images.fixed_height.url;
+                        const stillURL = results[i].images.fixed_height_still.url;
+                        gifImg.attr("src", stillURL);
+                        gifImg.attr("data-state", "still");
+                        gifImg.attr("data-animate", animateURL);
+                        gifImg.attr("data-still", stillURL);
+                        gifImg.attr("class", "gif");
+
+                        gifDiv.append(gifImg);
+
+                        $("#gifDisplay").prepend(gifDiv);
+
+                    }
+                });
+
+        });
+
+
+        // Animate/Still gif on Click
+
+        $("<img>").on("click", function (event) {
+
+            const state = $(this).attr("data-state");
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "still");
+            }
+        });
+    </script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
