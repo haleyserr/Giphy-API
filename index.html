@@ -50,130 +50,134 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <script type="text/javascript">
-        // Set Veriables
+        $(document).ready(function () {
+            // Set Veriables
 
-        // API Key not needed for query build, but left here for easy copy/paste
-        const apiKey = "go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk";
+            // API Key not needed for query build, but left here for easy copy/paste
+            const apiKey = "go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk";
 
-        // Character Array is technically not needed since no longerre-rendering buttons, but leaving for console info
+            // Character Array is technically not needed since no longerre-rendering buttons, but leaving for console info
 
-        const characterArray = ["Arya", "Daenerys", "Clegane", "Drogo", "Tyrion"];
-        console.log(characterArray);
-
-
-        // When user adds Character, create new Button and add to characterArray
-
-        // Figured out how to append new button instead of re-rendering all
-        $("#find-character").on("click", function (event) {
-            event.preventDefault();
-            const newCharacter = $("#button-input").val().trim();
-            console.log(newCharacter);
-            const buttonDiv = $("<button>");
-            buttonDiv.attr("data-character", newCharacter);
-            buttonDiv.text(newCharacter);
-            buttonDiv.attr("class", "gifButton btn btn-primary");
-
-            $("#buttonDisplay").append(buttonDiv);
-
-            characterArray.push(newCharacter);
+            const characterArray = ["Arya", "Daenerys", "Clegane", "Drogo", "Tyrion"];
             console.log(characterArray);
 
 
-        });
+            // When user adds Character, create new Button and add to characterArray
 
-        //Re-Render using Array -Superceded
+            // Figured out how to append new button instead of re-rendering all
+            $("#find-character").on("click", function (event) {
+                event.preventDefault();
+                const newCharacter = $("#button-input").val().trim();
+                console.log(newCharacter);
+                const buttonDiv = $("<button>");
+                buttonDiv.attr("data-character", newCharacter);
+                buttonDiv.text(newCharacter);
+                buttonDiv.attr("class", "gifButton btn btn-primary");
 
-        //function renderButtons() {
+                $("#buttonDisplay").append(buttonDiv);
 
-        //$("#buttonDisplay").empty();
-
-
-        // for (let i = 0; i < characterArray.length; i++) {
-        //const a = $("<button>");
-        // a.addClass("gifButton");
-        // a.attr("data-character", characterArray[i]);
-        // a.text(characterArray[i]);
-        // $("#buttonDisplay").append(a);
-        //}
-        //}
-
-        //renderButtons();
-
-        // $("#find-character").on("click", function (event) {
-
-        // event.preventDefault();
-        //const newCharacter = $("#button-input").val().trim();
-        //characterArray.push(newCharacter);
-        //renderButtons();
-        // });
+                characterArray.push(newCharacter);
+                console.log(characterArray);
 
 
-        // When a Button is clicked, perform AJAX Call
+            });
 
-        $(".gifButton").on("click", function (event) {
+            //Re-Render using Array -Superceded
 
-            const character = $(this).attr("data-character");
+            //function renderButtons() {
 
-            console.log(character);
-
-            const queryURL =
-                `https://api.giphy.com/v1/gifs/search?q=${character}&limit=10&offset=0&rating=G&lang=en&api_key=go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk`;
-
-            console.log(queryURL);
-
-            // AJAX Call
-            $.ajax({
-                    url: queryURL,
-                    method: "GET"
-
-                })
-
-                //Build Gifs IMG tag with data-still, data-animate, and src attributes
-                .then(function (response) {
-
-                    const results = response.data;
+            //$("#buttonDisplay").empty();
 
 
-                    //Since our query will pull up multiple div's. need to loop through results
+            // for (let i = 0; i < characterArray.length; i++) {
+            //const a = $("<button>");
+            // a.addClass("gifButton");
+            // a.attr("data-character", characterArray[i]);
+            // a.text(characterArray[i]);
+            // $("#buttonDisplay").append(a);
+            //}
+            //}
 
-                    for (let i = 0; i < results.length; i++) {
+            //renderButtons();
 
-                        const gifDiv = $("<div>");
-                        const gifImg = $("<img>");
-                        const animateURL = results[i].images.fixed_height.url;
-                        const stillURL = results[i].images.fixed_height_still.url;
-                        gifImg.attr("src", stillURL);
-                        gifImg.attr("data-state", "still");
-                        gifImg.attr("data-animate", animateURL);
-                        gifImg.attr("data-still", stillURL);
-                        gifImg.attr("data-character", character)
-                        gifImg.attr("class", "gif");
+            // $("#find-character").on("click", function (event) {
 
-                        gifDiv.append(gifImg);
-
-                        $("#gifDisplay").prepend(gifDiv);
-
-                    }
-                });
-
-        });
+            // event.preventDefault();
+            //const newCharacter = $("#button-input").val().trim();
+            //characterArray.push(newCharacter);
+            //renderButtons();
+            // });
 
 
-        // Animate or De-Animate when gif/image is clicked
+            // When a Button is clicked, perform AJAX Call
 
-        $(".gif").on("click", function (event) {
+            $(".gifButton").on("click", function (event) {
 
-            console.log("The event is working");
+                const character = $(this).attr("data-character");
 
-            const state = $(this).attr("data-state");
+                console.log(character);
 
-            if (state === "still") {
-                $(this).attr("src", $(this).attr("data-animate"));
-                $(this).attr("data-state", "animate");
-            } else {
-                $(this).attr("src", $(this).attr("data-still"));
-                $(this).attr("data-state", "still");
-            }
+                const queryURL =
+                    `https://api.giphy.com/v1/gifs/search?q=${character}&limit=10&offset=0&rating=G&lang=en&api_key=go3sk7tUvrCEUzAsG5JmIZLWWfHr2kAk`;
+
+                console.log(queryURL);
+
+                // AJAX Call
+                $.ajax({
+                        url: queryURL,
+                        method: "GET"
+
+                    })
+
+                    //Build Gifs IMG tag with data-still, data-animate, and src attributes
+                    .then(function (response) {
+
+                        const results = response.data;
+
+
+                        //Since our query will pull up multiple div's. need to loop through results
+
+                        for (let i = 0; i < results.length; i++) {
+
+                            const gifDiv = $("<div>");
+                            const gifImg = $("<img>");
+                            const animateURL = results[i].images.fixed_height.url;
+                            const stillURL = results[i].images.fixed_height_still.url;
+                            gifImg.attr("src", stillURL);
+                            gifImg.attr("data-state", "still");
+                            gifImg.attr("data-animate", animateURL);
+                            gifImg.attr("data-still", stillURL);
+                            gifImg.attr("data-character", character)
+                            gifImg.attr("class", "gif");
+
+                            gifDiv.append(gifImg);
+
+                            $("#gifDisplay").prepend(gifDiv);
+
+                        }
+                    });
+
+            });
+
+
+            // Animate or De-Animate when gif/image is clicked
+
+            $(".gif").on("click", function (event) {
+
+                console.log("The event is working");
+
+                const state = $(this).attr("data-state");
+
+                if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).attr("data-state", "animate");
+                } else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                }
+            });
+
+
         });
     </script>
 </body>
