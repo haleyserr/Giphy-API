@@ -11,17 +11,27 @@
 
 <body>
 
-
-    <div id="buttonDisplay">
-        <button class="gifButton" data-character="Arya">Arya</button>
-        <button class="gifButton" data-character="Daenerys">Daenerys</button>
-        <button class="gifButton" data-character="Clegane">Clegane</button>
-        <button class="gifButton" data-character="Drogo">Drogo</button>
-        <button class="gifButton" data-character="Tyrion">Tyrion</button>
+    <div class="jumbotron text-center bg-light">
+        <h1 class="display-4">Welcome to Game of Thrones GIF-topia!</h1>
+        <p class="lead">Click on one of the below characters to see related gif's, or add your own!</p>
+        <hr class="my-4">
 
     </div>
 
-    <div id="addButton">
+
+    <div id="buttonDisplay" class="w-100 text-center">
+        <button class="gifButton btn btn-primary" data-character="Arya">Arya</button>
+        <button class="gifButton btn btn-primary" data-character="Daenerys">Daenerys</button>
+        <button class="gifButton btn btn-primary" data-character="Clegane">Clegane</button>
+        <button class="gifButton btn btn-primary" data-character="Drogo">Drogo</button>
+        <button class="gifButton btn btn-primary" data-character="Tyrion">Tyrion</button>
+
+    </div>
+
+    <p></p>
+
+    <div id="addButton" class="w-100 text-center">
+
         <form id="add-button-form">
             <label for="button-input">Search for another character:</label>
             <input type="text" id="button-input"><br>
@@ -30,12 +40,16 @@
 
     </div>
 
-    <div id="gifDisplay">
+    <p></p>
 
+
+    <div id="gifDisplay" class="w-100 text-center">
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
         // Set Veriables
 
         // API Key not needed for query build, but left here for easy copy/paste
@@ -51,17 +65,19 @@
 
         // Figured out how to append new button instead of re-rendering all
         $("#find-character").on("click", function (event) {
-        event.preventDefault();
-        const newCharacter = $("#button-input").val().trim();
-        console.log(newCharacter);
-        const buttonDiv = $("<button>");
-        buttonDiv.attr("data-character", newCharacter);
-        buttonDiv.text(newCharacter);
-        buttonDiv.attr("class", "gifButton")
+            event.preventDefault();
+            const newCharacter = $("#button-input").val().trim();
+            console.log(newCharacter);
+            const buttonDiv = $("<button>");
+            buttonDiv.attr("data-character", newCharacter);
+            buttonDiv.text(newCharacter);
+            buttonDiv.attr("class", "gifButton btn btn-primary");
 
-        $("#buttonDisplay").append(buttonDiv);
+            $("#buttonDisplay").append(buttonDiv);
 
-        characterArray.push(newCharacter);
+            characterArray.push(newCharacter);
+            console.log(characterArray);
+
 
         });
 
@@ -69,27 +85,27 @@
 
         //function renderButtons() {
 
-            //$("#buttonDisplay").empty();
+        //$("#buttonDisplay").empty();
 
 
-           // for (let i = 0; i < characterArray.length; i++) {
-                //const a = $("<button>");
-               // a.addClass("gifButton");
-               // a.attr("data-character", characterArray[i]);
-               // a.text(characterArray[i]);
-               // $("#buttonDisplay").append(a);
-            //}
+        // for (let i = 0; i < characterArray.length; i++) {
+        //const a = $("<button>");
+        // a.addClass("gifButton");
+        // a.attr("data-character", characterArray[i]);
+        // a.text(characterArray[i]);
+        // $("#buttonDisplay").append(a);
+        //}
         //}
 
         //renderButtons();
 
-       // $("#find-character").on("click", function (event) {
+        // $("#find-character").on("click", function (event) {
 
-           // event.preventDefault();
-            //const newCharacter = $("#button-input").val().trim();
-            //characterArray.push(newCharacter);
-            //renderButtons();
-       // });
+        // event.preventDefault();
+        //const newCharacter = $("#button-input").val().trim();
+        //characterArray.push(newCharacter);
+        //renderButtons();
+        // });
 
 
         // When a Button is clicked, perform AJAX Call
@@ -130,6 +146,7 @@
                         gifImg.attr("data-state", "still");
                         gifImg.attr("data-animate", animateURL);
                         gifImg.attr("data-still", stillURL);
+                        gifImg.attr("data-character", character)
                         gifImg.attr("class", "gif");
 
                         gifDiv.append(gifImg);
@@ -142,11 +159,14 @@
         });
 
 
-        // Animate/Still gif on Click
+        // Animate or De-Animate when gif/image is clicked
 
-        $("<img>").on("click", function (event) {
+        $(".gif").on("click", function (event) {
+
+            console.log("The event is working");
 
             const state = $(this).attr("data-state");
+
             if (state === "still") {
                 $(this).attr("src", $(this).attr("data-animate"));
                 $(this).attr("data-state", "animate");
